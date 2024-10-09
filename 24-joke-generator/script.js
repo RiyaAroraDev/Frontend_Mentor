@@ -1,22 +1,20 @@
 const jokeText = document.getElementById('jokeText');
-let button = document.getElementById('btn');
-let url = "https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,explicit&type=single"
+const button = document.getElementById('btn');
+const url = "https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,explicit&type=single";
 
-const getJoke = () => {
-    return new Promise((resolve, reject) => {
-        fetch(url)
-            .then(data => data.json())
-            .then(item => {
-                jokeText.textContent = item.joke;
-                resolve();
-            })
-            .catch(error => {
-                console.error('Error fetching joke:', error);
-            });
-    });
-}
+const getJoke = async () => {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const item = await response.json();
+        jokeText.textContent = item.joke || "No joke found!";
+    } catch (error) {
+        console.error('Error fetching joke:', error);
+        jokeText.textContent = "Sorry, couldn't fetch a joke. Please try again.";
+    }
+};
 
 button.addEventListener('click', getJoke);
-
-
 
